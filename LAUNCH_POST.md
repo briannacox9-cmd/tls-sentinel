@@ -1,32 +1,13 @@
-# LinkedIn launch post
+# Launch post draft
 
-A certificate-renewal job says “success,” everyone moves on—and the live service keeps serving the old certificate.
+I built **TLS Sentinel**, a small open-source-style monitoring MVP for a failure mode that shows up repeatedly in DevOps and sysadmin work: the certificate-renewal job says “success,” but the live service is still serving the old certificate.
 
-That is the problem behind a small project I’ve been building: **TLS Sentinel**.
+TLS Sentinel performs real concurrent TLS handshakes against a YAML inventory, reports the certificate actually presented to clients, stores fingerprint history, and alerts when certificates expire, hostnames mismatch, scans fail, or a certificate stays unchanged near expiration. It also exposes Prometheus metrics and lightweight health endpoints, runs as a non-root Docker container, and includes hardened Kubernetes manifests.
 
-It connects to real TLS endpoints and checks the certificate users are actually receiving. It reports the expiration date, issuer, subject, SANs, serial number, SHA-256 fingerprint, hostname validation, and any connection errors.
+The part I care about most is the distinction between automation status and outcome verification. A successful renewal job is a control-plane signal. A handshake against the live endpoint verifies the data plane.
 
-The useful part is the history. TLS Sentinel remembers certificate fingerprints, detects when they change, and warns when the same certificate is still being served close to expiration.
+The repository includes local-certificate integration tests, a no-internet smoke test, GitHub Actions CI, example configuration, and documentation covering security tradeoffs and current limitations. This is an MVP, so I’ve been explicit about what it does not yet provide—such as CA-chain validation, alert deduplication, or multi-replica history storage.
 
-The MVP has:
+If you operate TLS at a reverse proxy, ingress, CDN, or load balancer, I’d be interested to hear which reload/deployment failure modes have bitten you.
 
-- A YAML endpoint inventory
-- Concurrent TLS scans
-- Prometheus metrics
-- Webhook alerts
-- A CLI plus health and readiness endpoints
-- Docker and Kubernetes examples
-- Local-certificate integration tests
-- GitHub Actions CI
-
-The main idea is pretty simple:
-
-**A renewal job tells you the process ran. A live handshake tells you whether the result reached users.**
-
-The normal background interval is 15 minutes, and you can also run an immediate check from a Certbot deploy hook or deployment pipeline. I included sample Prometheus rules with persistence windows so one brief network issue does not immediately turn into an alert.
-
-It is still an MVP. CA-chain validation, multi-region probing, alert deduplication, and shared history storage are on the roadmap—not features I’m pretending are already there.
-
-I’d be interested to hear how other DevOps and sysadmin teams verify that renewed certificates actually reach every proxy, ingress, load balancer, and application instance.
-
-#DevOps #SysAdmin #TLS #Observability #Python #Prometheus #SRE
+#devops #sysadmin #tls #observability #python #prometheus
