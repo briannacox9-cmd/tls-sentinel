@@ -34,7 +34,7 @@ class Config:
     webhook_url: str = ""
     webhook_timeout_seconds: float = 5.0
     listen: str = "0.0.0.0:8080"
-    scan_interval_seconds: float = 300.0
+    scan_interval_seconds: float = 900.0
 
 
 def _duration(value: Any, field_name: str) -> float:
@@ -103,5 +103,5 @@ def load(path: str | Path) -> Config:
         webhook_url=str(webhook.get("url", "")),
         webhook_timeout_seconds=_duration(webhook.get("timeout", "5s"), "webhook.timeout"),
         listen=str(server.get("listen", "0.0.0.0:8080")),
-        scan_interval_seconds=_duration(server.get("scan_interval", "5m"), "server.scan_interval"),
+        scan_interval_seconds=_duration(server.get("scan_interval", "15m"), "server.scan_interval"),
     )

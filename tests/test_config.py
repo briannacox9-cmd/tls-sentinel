@@ -24,6 +24,7 @@ endpoints:
         self.assertEqual(config.endpoints[0].thresholds.warning_days, 20)
         self.assertEqual(config.endpoints[0].thresholds.critical_days, 9)
         self.assertEqual(config.timeout_seconds, 5)
+        self.assertEqual(config.scan_interval_seconds, 900)
 
     def test_rejects_duplicate_names(self):
         with TemporaryDirectory() as directory:

@@ -79,7 +79,7 @@ webhook:
 
 server:
   listen: "0.0.0.0:8080"
-  scan_interval: 5m
+  scan_interval: 15m
 
 endpoints:
   - name: production-api
