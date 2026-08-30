@@ -1,0 +1,38 @@
+groups:
+  - name: tls-sentinel
+    rules:
+      - alert: TLSCertificateExpiringSoon
+        expr: tls_sentinel_certificate_days_remaining < 14
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "TLS certificate for {{ $labels.name }} expires soon"
+          description: "{{ $labels.hostname }}:{{ $labels.port }} has fewer than 14 days remaining."
+
+      - alert: TLSCertificateExpiryCritical
+        expr: tls_sentinel_certificate_days_remaining < 7
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "TLS certificate for {{ $labels.name }} is critically close to expiry"
+          description: "{{ $labels.hostname }}:{{ $labels.port }} has fewer than 7 days remaining."
+
+      - alert: TLSCertificateHostnameMismatch
+        expr: tls_sentinel_hostname_valid == 0 and tls_sentinel_scan_success == 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "TLS hostname validation failed for {{ $labels.name }}"
+          description: "The live certificate does not match {{ $labels.hostname }}."
+
+      - alert: TLSEndpointScanFailed
+        expr: tls_sentinel_scan_success == 0
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "TLS scan failed for {{ $labels.name }}"
+          description: "TLS Sentinel cannot scan {{ $labels.hostname }}:{{ $labels.port }}."

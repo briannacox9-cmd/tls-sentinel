@@ -139,6 +139,8 @@ Webhook failures are logged but do not stop scanning or the metrics server.
 
 Labels contain endpoint name, hostname, and port. The fingerprint appears only on the info metric to avoid multiplying every metric series.
 
+[`examples/prometheus-alerts.yml`](examples/prometheus-alerts.yml) provides starting alert rules with `for` periods that suppress transient failures. Tune the thresholds, routing, grouping, and repeat intervals to match your renewal process and incident policy before production use.
+
 ## Docker
 
 ```bash
