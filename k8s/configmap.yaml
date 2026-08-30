@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tls-sentinel-config
+data:
+  config.yaml: |
+    timeout: 5s
+    history_file: /data/history.jsonl
+    defaults:
+      warning_days: 30
+      critical_days: 7
+      unchanged_days: 14
+    server:
+      listen: "0.0.0.0:8080"
+      scan_interval: 5m
+    endpoints:
+      - name: production-api
+        hostname: api.example.com
+        port: 443

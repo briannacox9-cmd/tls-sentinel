@@ -1,0 +1,28 @@
+# TLS Sentinel uses conservative defaults and never sends a webhook unless url is set.
+timeout: 5s
+history_file: ./data/history.jsonl
+
+defaults:
+  warning_days: 30
+  critical_days: 7
+  unchanged_days: 14
+
+webhook:
+  url: ""
+  timeout: 5s
+
+server:
+  listen: ":8080"
+  scan_interval: 5m
+
+endpoints:
+  - name: production-api
+    hostname: api.example.com
+    port: 443
+    thresholds:
+      warning_days: 21
+      critical_days: 7
+      unchanged_days: 10
+  - name: customer-portal
+    hostname: portal.example.com
+    port: 443

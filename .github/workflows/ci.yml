@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: tls-sentinel/pyproject.toml
+      - name: Install
+        working-directory: tls-sentinel
+        run: python -m pip install --upgrade pip && python -m pip install -e '.[dev]'
+      - name: Compile and test
+        working-directory: tls-sentinel
+        run: ruff check src tests scripts && python -m compileall -q src tests scripts && python -m unittest discover -s tests -v
+      - name: Build package
+        working-directory: tls-sentinel
+        run: python -m build
+      - name: Build container
+        working-directory: tls-sentinel
+        run: docker build -t tls-sentinel:ci .
